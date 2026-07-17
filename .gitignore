@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# TypeScript
+tsconfig.tsbuildinfo
+
+# OS
+.DS_Store
+
+# Claude Code local state
+.claude/
+
+# Env
+.env*.local
+
+# Reference exports (design references, not app code)
+best-rate-report/
+best-rate-report.zip

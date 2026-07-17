@@ -1,0 +1,110 @@
+/*
+  PDF print stylesheet — used when Playwright renders the /report/pdf-preview route.
+  This overrides the web stylesheet for print-specific layout.
+
+  Apply this alongside the base DM Sans font load in the PDF preview route.
+  The web stylesheet is NOT loaded when Playwright requests this route.
+*/
+
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DM_Sans[opsz,wght].ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+:root {
+  /* Design tokens from Figma */
+  --text-primary: #0B1220;
+  --text-secondary: #2A3347;
+  --surface-base: #FFFFFF;
+  --surface-muted: #EBEBED;
+  --brand-accent: #9BFFD0;
+  --accent-purple-surface: #F5F3FF;
+  --accent-purple-solid: #6D28D9;
+  --warning-surface: #FFE992;
+  --warning-deep: #B45309;
+  --info-solid: #2386FF;
+  --success-accent: #16DD95;
+  --success-deep: #047857;
+}
+
+html, body {
+  font-family: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: #F7F7F8;
+  /* Critical for color backgrounds in PDF */
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+@page {
+  size: Letter;
+  margin: 0.75in 0.75in 1in 0.75in;
+}
+
+/* Prevent orphaned headings and split cards */
+.card,
+.chart-card,
+.system-block,
+.kpi-row,
+.rate-plan-card,
+.faq-item {
+  page-break-inside: avoid;
+}
+
+/* Force breaks before major sections */
+.section-break {
+  page-break-before: always;
+}
+
+/* Expand accordions in print — FAQ answers must be visible */
+.faq-answer {
+  display: block !important;
+  visibility: visible !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.faq-chevron {
+  display: none; /* hide expand/collapse icon */
+}
+
+/* Charts are wider in PDF — override any max-width from web layout */
+.chart-container {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+/* Side-by-side rate plan cards: keep 2-col layout at full Letter width */
+.rate-plan-row {
+  display: flex;
+  flex-direction: row !important;
+  gap: 16px;
+}
+
+/* KPI cards row: full width, more breathing room */
+.kpi-row {
+  display: flex;
+  flex-direction: row !important;
+  gap: 16px;
+}
+
+/* Assumptions chips: allow wrapping, no truncation */
+.assumption-chip {
+  white-space: normal;
+}
+
+/* CTA banner: drop the interactive button treatment, show as static */
+.cta-button::after {
+  content: " — " attr(data-url);
+  font-weight: normal;
+  font-size: 11px;
+  color: var(--text-secondary);
+}

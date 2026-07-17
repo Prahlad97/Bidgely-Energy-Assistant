@@ -1,0 +1,1013 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Root tokens (ported from original HTML) ───────────────────────────────── */
+:root {
+  --primary: #1d5ed8;
+  --primary-50: #1d5ed880;
+  --primary-10: #dbe7fe;
+  --text-primary: #1e232e;
+  --text-muted: #9a9a9a;
+  --text-secondary: #616f89;
+  --text-dim: #333;
+  --stroke-tertiary: #eaedf6;
+  --stroke-secondary: #d0d6e7;
+  --bg-secondary: #f4f6fa;
+  --bg-badge: #f6f6f6;
+  --border-light: #f6f6f6;
+  --gradient-text: linear-gradient(34.2deg, #0f4184 0.2%, #1e62c1 29.86%, #94207b 51.31%, #e4194b 77.07%, #e4194b 102.82%, #f1774a 128.58%);
+  --gradient-glow: linear-gradient(173.7deg, #0400ff 2.3%, #ff3d00 97.1%);
+
+  /* Solar report tokens (kept for SR panels) */
+  --sr-bg-hero: #e6f2ed;
+  --sr-bg-card: #ffffff;
+  --sr-primary: #186cdd;
+  --sr-primary-light: #e8f2fd;
+  --sr-text-dark: #1a2332;
+  --sr-text-mid: #3d5166;
+  --sr-text-muted: #6b7c8f;
+  --sr-solar-gen: #5bd584;
+  --sr-savings-green: #1a7a4a;
+  --sr-savings-bg: #e6f4ec;
+  --sr-warning: #e67e22;
+  --sr-warning-bg: #fef3e2;
+  --sr-border: #dde6ef;
+  --sr-radius: 12px;
+  --sr-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  min-height: 100%;
+  /* Montserrat is the app-wide typeface (loaded via next/font in layout.tsx
+     as --font-montserrat). The system-font fallback handles the brief flash
+     before next/font hydrates and any environment where the Google Fonts
+     subset doesn't load. */
+  font-family: var(--font-montserrat), Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-primary);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+button { font-family: inherit; }
+
+/* ─── App shell ─────────────────────────────────────────────────────────────── */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #fefefe;
+  overflow: hidden;
+}
+
+/* ─── Header ────────────────────────────────────────────────────────────────── */
+#header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 24px;
+  background: #fff;
+  border-bottom: 1px solid var(--border-light);
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.logo-icon { width: 21px; height: 22px; flex-shrink: 0; }
+
+.logo-text { display: flex; align-items: center; gap: 4px; }
+
+.logo-name {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.beta-badge {
+  background: var(--bg-badge);
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: normal;
+  padding: 1px 4px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.header-actions { display: flex; align-items: center; gap: 16px; }
+
+.header-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-primary);
+  border-radius: 5px;
+  padding: 4px 8px;
+  transition: background 0.15s;
+}
+.header-btn:hover { background: var(--bg-secondary); }
+.header-btn svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--text-primary); }
+
+/* ─── Content area ──────────────────────────────────────────────────────────── */
+#content-area {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+#main-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: flex 0.35s ease;
+  min-width: 0;
+}
+
+/* ─── Welcome screen ────────────────────────────────────────────────────────── */
+#welcome-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 200px 60px 24px;
+  position: relative;
+}
+
+.welcome-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 720px;
+  position: relative;
+}
+
+.glow-bg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 56px;
+  border-radius: 10px;
+  background: var(--gradient-glow);
+  opacity: 0.1;
+  filter: blur(13px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.welcome-heading {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 32px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.welcome-heading > span {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.welcome-heading-mark { flex-shrink: 0; }
+
+/* Input section ── */
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+}
+
+.input-wrapper { position: relative; width: 100%; }
+
+.chat-input {
+  width: 100%;
+  height: 56px;
+  border: 1px solid #e1e0e0;
+  border-radius: 8px;
+  padding: 0 56px 0 14px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--text-primary);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+  caret-color: var(--primary);
+}
+
+.chat-input::placeholder { color: var(--text-muted); }
+.chat-input:focus { border-color: var(--primary); }
+
+/* Welcome-specific input: 1px #186cdd border, 16px text, soft ambient shadow */
+.welcome-input {
+  border-color: #186cdd;
+  font-size: 16px;
+  box-shadow: 0 0 7px rgba(40, 41, 61, 0.04), 0 2px 40px rgba(96, 97, 112, 0.16);
+}
+.welcome-input::placeholder { color: #b3b3b3; }
+
+.send-btn {
+  position: absolute;
+  right: 7px;
+  bottom: 7px;
+  width: 40px;
+  height: 40px;
+  background: var(--primary-10);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.1s;
+  flex-shrink: 0;
+  z-index: 1;
+}
+.send-btn:hover { background: #c3d8fd; }
+.send-btn:active { transform: scale(0.93); }
+.send-btn svg { width: 20px; height: 20px; color: var(--primary); }
+.send-btn.has-text { background: var(--primary); }
+.send-btn.has-text svg { color: #fff; }
+
+/* Welcome send button: #e8f0fc field, paper-plane pointing up-right */
+.welcome-send-btn { background: #e8f0fc; }
+.welcome-send-btn svg { width: 22px; height: 22px; transform: rotate(-45deg); }
+
+/* Explore energy checks ── */
+.explore-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.explore-label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #262e40;
+  text-align: center;
+  padding: 8px 0;
+}
+
+/* Chips ── */
+.chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0 8px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 8px;
+  border-radius: 8px;
+  border: 1px solid #dfdfe0;
+  background: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: #000;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+}
+.chip:hover { background: var(--bg-secondary); border-color: var(--stroke-secondary); }
+.chip:active { transform: scale(0.97); }
+
+.chip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.chip-icon img { display: block; object-fit: contain; }
+
+/* Suggestion dropdown ── */
+.suggestion-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--stroke-tertiary);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 20;
+  animation: fadeIn 0.15s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.suggestion-dropdown.hidden { display: none; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.suggestion-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.5;
+  padding-bottom: 4px;
+}
+.suggestion-header svg { width: 16px; height: 16px; color: var(--text-primary); }
+
+.suggestion-label {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-primary);
+}
+
+.suggestion-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+}
+.suggestion-close:hover { opacity: 1; }
+.suggestion-close svg { width: 16px; height: 16px; color: var(--text-primary); }
+
+.suggestion-divider { height: 4px; }
+
+.suggestion-item {
+  padding: 10px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.12s;
+  white-space: nowrap;
+}
+.suggestion-item:hover { background: var(--bg-secondary); }
+
+/* Understand my Bill — suggestion list ── */
+.suggestion-dropdown-bill {
+  padding: 12px 16px 8px;
+  gap: 0;
+  max-height: min(480px, 75vh);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.suggestion-bill-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.suggestion-bill-list[data-expanded='false'] .suggestion-bill-item:nth-child(n + 4) {
+  display: none;
+}
+
+.suggestion-dropdown-bill .suggestion-view-more {
+  flex-shrink: 0;
+}
+
+.suggestion-bill-item {
+  display: block;
+  width: 100%;
+  border: none;
+  font: inherit;
+  white-space: normal;
+  text-align: left;
+}
+
+.suggestion-view-more {
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px 8px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--sr-primary, #1e62c1);
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.12s;
+}
+
+.suggestion-view-more:hover { background: var(--bg-secondary); }
+
+/* Bill tool placeholder (right panel) ── */
+.bill-tool-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 280px;
+  padding: 32px 24px;
+  color: var(--text-primary);
+}
+
+.bill-tool-placeholder-icon {
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.bill-tool-placeholder-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 26px;
+  margin: 0 0 8px;
+}
+
+.bill-tool-placeholder-body {
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text-muted);
+  max-width: 280px;
+  margin: 0;
+}
+
+/* Page-load reveal animations ── */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-heading { animation: revealUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: 0.05s; }
+.input-section   { animation: revealUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: 0.18s; }
+.chips-row       { animation: revealUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: 0.30s; }
+.account-info, .disclaimer { animation: revealUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: 0.42s; }
+
+/* Account info & disclaimer ── */
+.account-info {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--text-dim);
+  text-align: center;
+  opacity: 0.2;
+  width: 100%;
+}
+
+.disclaimer {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--text-dim);
+  text-align: center;
+  opacity: 0.2;
+  flex-shrink: 0;
+}
+
+/* ─── Chat screen ───────────────────────────────────────────────────────────── */
+#chat-screen {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+#chat-screen.visible { display: flex; }
+
+#message-thread {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 0 16px;
+  scroll-behavior: smooth;
+  background: #fff;
+}
+#message-thread::-webkit-scrollbar { width: 4px; }
+#message-thread::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+.message-group {
+  display: flex;
+  flex-direction: column;
+  padding: 0 max(32px, calc(50% - 380px));
+  /* 24px between consecutive bubbles — gives the chat a calmer rhythm
+     between user and assistant turns instead of crowding them together. */
+  margin-bottom: 24px;
+  animation: msgIn 0.18s ease;
+}
+
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.message-group.user-group { align-items: flex-end; }
+
+.user-bubble {
+  background: #f0f0f0;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.55;
+  padding: 10px 16px;
+  border-radius: 18px;
+  max-width: 70%;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.message-group.ai-group { align-items: flex-start; }
+
+.ai-body {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-primary);
+  max-width: 100%;
+  word-break: break-word;
+}
+.ai-body strong { font-weight: 600; }
+
+.typing-dots {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  padding: 10px 0 4px;
+}
+.typing-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #bbb;
+  animation: dot-pulse 1.2s infinite;
+}
+.typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes dot-pulse {
+  0%, 60%, 100% { transform: scale(1); opacity: 0.5; }
+  30% { transform: scale(1.3); opacity: 1; }
+}
+
+/* Inline option chips inside chat messages */
+.msg-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.msg-option {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--stroke-secondary);
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: background 0.15s, border-color 0.15s;
+}
+.msg-option:hover { background: var(--bg-secondary); border-color: var(--primary); color: var(--primary); }
+
+.msg-option-note {
+  display: block;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+/* Inline report card in chat
+   Figma 1476:11177 (inactive) / 1476:11195 (active) — pill (radius 18) with
+   a 36×36 leading icon container (radius 10) and a 14/20 SemiBold title.
+   Both states share a white pill + 1px Web/Background/500 stroke; the
+   icon container is what changes:
+     inactive → bg Web/Background/400 (#EFEFEF), glyph Foreground/700 (#000)
+     active   → bg Foreground/700 (#000),       glyph Web/Primary/200 (#F3F8FD)
+   Monochrome treatment — the report card no longer carries a colored
+   surface tint when active; the contrast lives entirely in the icon. */
+.chat-report-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px 10px 10px;     /* tighter on the icon side */
+  margin-top: 10px;
+  min-width: 280px;
+  border-radius: 18px;              /* full pill */
+  background: #FFFFFF;              /* Web/Background/300 */
+  border: 1px solid #DFDFE0;        /* Web/Background/500 */
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  font-family: inherit;
+}
+.chat-report-card:hover {
+  background: #FAFAFA;
+}
+
+.chat-report-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #EFEFEF;              /* Web/Background/400 — neutral gray */
+  border: 0.5px solid #FFFFFF;
+  color: #000000;                    /* Foreground/700 — glyph via currentColor */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.chat-report-card.active .chat-report-card-icon {
+  background: #000000;              /* Foreground/700 solid */
+  color: #F3F8FD;                    /* Web/Primary/200 — pale glyph on black */
+}
+
+.chat-report-card-title {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  color: #000000;                    /* Web/Foreground/700 */
+}
+
+/* ─── Chat input bar (bottom of chat-screen) ───────────────────────────────── */
+#chat-input-bar {
+  flex-shrink: 0;
+  padding: 12px max(32px, calc(50% - 380px)) 12px;
+  background: #fff;
+  border-top: 1px solid var(--border-light);
+}
+
+.chat-input-row {
+  position: relative;
+  width: 100%;
+}
+
+/* ─── Right panel ───────────────────────────────────────────────────────────── */
+#right-panel {
+  width: 0;
+  overflow: hidden;
+  flex-shrink: 0;
+  /* No border-left — the floating card inside has its own stroke,
+     which serves as the visual separator from the chat column. */
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#right-panel.open { width: 60%; }
+
+.right-panel-inner {
+  width: 60vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* White bezel — the floating card is defined purely by its stroke + radius;
+     the 4px padding gives just enough visual gap from the modal edges. */
+  background: #fff;
+  padding: 4px;
+}
+
+.right-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  flex-shrink: 0;
+  /* Top half of the floating card: matches the report wash (#FBFBFC) so the
+     sticky header reads as a continuation of the report surface rather than
+     a separate white strip. Stroke on top + sides, rounded top corners only
+     (continues into the body below). */
+  background: #FBFBFC;
+  border: 1px solid var(--stroke-tertiary);
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+}
+
+.right-panel-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 24px;
+}
+
+.right-panel-close,
+.panel-pdf-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  transition: background 0.15s;
+}
+.right-panel-close:hover,
+.panel-pdf-btn:hover { background: var(--bg-secondary); }
+.right-panel-close svg { width: 18px; height: 18px; }
+.panel-pdf-btn svg { width: 14px; height: 14px; }
+
+.right-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  /* Bottom half of the floating card: white surface, stroke on sides + bottom,
+     rounded bottom corners only (continues from the header above) */
+  background: #fff;
+  border: 1px solid var(--stroke-tertiary);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+}
+
+/* Solar report uses ReportWebView which has its own internal padding —
+   strip the body's default 24px so we don't double-pad. Match the report
+   wash (#FBFBFC) so the rubberband / overscroll doesn't expose a white
+   strip when the user pulls past the top. overscroll-behavior: contain
+   keeps the bounce inside the report instead of leaking through to the
+   modal underneath. */
+.right-panel-body.report-canvas {
+  padding: 0;
+  background: #FBFBFC;
+  overscroll-behavior: contain;
+}
+
+/* Modal chat surface — remove the modal-wide top divider under the header
+   and the divider above the input, so the chat side reads as one
+   continuous surface. Scoped to the modal so a standalone chat would still
+   keep its strokes if reused elsewhere. */
+#energy-assistant-modal #header { border-bottom: none; }
+#energy-assistant-modal #chat-input-bar { border-top: none; }
+
+.right-panel-body::-webkit-scrollbar { width: 4px; }
+.right-panel-body::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+/* Loading state inside right panel */
+.panel-loading {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--text-secondary);
+}
+.panel-loading-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--stroke-tertiary);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.panel-loading-text { font-size: 14px; font-weight: 500; }
+.panel-loading-dots::after { content: ''; animation: loadingDots 1.4s infinite; }
+@keyframes loadingDots {
+  0%   { content: ''; }
+  25%  { content: '.'; }
+  50%  { content: '..'; }
+  75%  { content: '...'; }
+  100% { content: ''; }
+}
+
+/* ─── Solar report panel scaffolding (kept for SR panels) ───────────────────── */
+.sr-section-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--sr-text-dark);
+  margin-bottom: 14px;
+}
+.sr-card {
+  background: var(--sr-bg-card);
+  border-radius: var(--sr-radius);
+  box-shadow: var(--sr-shadow);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.sr-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--sr-border);
+}
+.sr-stat-row:last-child { border-bottom: none; }
+.sr-stat-label { font-size: 13px; color: var(--sr-text-mid); }
+.sr-stat-value { font-size: 14px; font-weight: 600; color: var(--sr-text-dark); }
+.sr-hero-stat {
+  text-align: center;
+  padding: 24px;
+  background: var(--sr-bg-hero);
+  border-radius: var(--sr-radius);
+  margin-bottom: 16px;
+}
+.sr-hero-amount { font-size: 40px; font-weight: 800; color: var(--sr-text-dark); line-height: 1; margin-bottom: 4px; }
+.sr-hero-label { font-size: 13px; color: var(--sr-text-mid); }
+.sr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.sr-badge.savings { background: var(--sr-savings-bg); color: var(--sr-savings-green); }
+.sr-badge.warning { background: var(--sr-warning-bg); color: var(--sr-warning); }
+.sr-badge.info { background: var(--sr-primary-light); color: var(--sr-primary); }
+
+/* ============================================================
+   Energy Assistant Modal — fullscreen popup wrapping ChatContainer
+   Slides up from the bottom; ✕ closes; chat state persists.
+   ============================================================ */
+#energy-assistant-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #ffffff;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Will-change hints help smooth the animation on weaker GPUs */
+  will-change: transform, clip-path, opacity;
+}
+
+/* Slide variant — translateY from below the viewport */
+#energy-assistant-modal.slide {
+  transform: translateY(100%);
+  opacity: 0;
+  transition:
+    transform 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 240ms ease;
+}
+#energy-assistant-modal.slide.open {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Morph variant — clip-path expanding from a source rect (the home widget) */
+#energy-assistant-modal.morph {
+  transform: none;
+  opacity: 1;
+  clip-path: inset(
+    var(--ea-from-top, 100%)
+    var(--ea-from-right, 0px)
+    var(--ea-from-bottom, 0px)
+    var(--ea-from-left, 0px)
+    round var(--ea-from-radius, 16px)
+  );
+  transition: clip-path 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+#energy-assistant-modal.morph.open {
+  clip-path: inset(0px 0px 0px 0px round 0px);
+  pointer-events: auto;
+}
+
+#energy-assistant-modal .ea-modal-inner {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The inner ChatContainer #app is already flex column, just ensure it fills */
+#energy-assistant-modal #app {
+  height: 100%;
+}
+
+/* Icon-only variant of .header-btn used for the modal close button —
+   sits inline with the other header actions (Chat History, New Chat). */
+.header-btn-icon { padding: 8px; }
+.header-btn-icon svg { width: 16px; height: 16px; }
+
+@media (prefers-reduced-motion: reduce) {
+  #energy-assistant-modal.slide,
+  #energy-assistant-modal.morph {
+    transition: opacity 150ms ease;
+    transform: none;
+    clip-path: none;
+    opacity: 0;
+  }
+  #energy-assistant-modal.slide.open,
+  #energy-assistant-modal.morph.open {
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   Home Assistant Widget — embedded entry point on the home page.
+   Renders the shared AssistantPrompt block inside a white card
+   (per Figma home block), with the 720px column centered.
+   ============================================================ */
+.home-assistant-widget {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  padding: 40px 24px;
+}
+.home-assistant-widget .welcome-center { max-width: 720px; }
+
+/* ============================================================
+   Energy Assistant FAB — floating action button (bottom-right).
+   Brand-gradient chat bubble + white sparkle (Figma 2164:5048),
+   with a label pill that expands on hover.
+   ============================================================ */
+.ea-fab {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  z-index: 50;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.ea-fab-icon {
+  display: block;
+  width: 56px;
+  height: 56px;
+  filter: drop-shadow(0 6px 16px rgba(40, 41, 61, 0.28));
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ea-fab-icon svg { display: block; width: 100%; height: 100%; }
+.ea-fab:hover .ea-fab-icon { transform: scale(1.06); }
+.ea-fab:active .ea-fab-icon { transform: scale(0.95); }
+
+/* Hover label pill (expands to the left of the icon; no reserved layout width) */
+.ea-fab-label {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) translateX(8px);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #262e40;
+  background: #fff;
+  border-radius: 999px;
+  padding: 8px 14px;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(40, 41, 61, 0.16);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.ea-fab:hover .ea-fab-label,
+.ea-fab:focus-visible .ea-fab-label {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
