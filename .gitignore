@@ -1,22 +1,41 @@
-# Dependencies
+# dependencies
 node_modules/
+.pnp
+.pnp.js
 
-# Next.js build output
+# next.js
 .next/
 out/
+build/
+*.tsbuildinfo
 
-# TypeScript
-tsconfig.tsbuildinfo
-
-# OS
+# misc
 .DS_Store
+*.pem
 
-# Claude Code local state
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env
+.env*
+!.env.example
+
+# editors
+.vscode/
+.idea/
+
+# unrelated parallel project bundled in this directory
+meraki/
+
+# legacy artifact
+Energy Assistant Latest copy.html
+
+# tooling
 .claude/
 
-# Env
-.env*.local
-
-# Reference exports (design references, not app code)
+# reference exports (design references, not app code)
 best-rate-report/
 best-rate-report.zip

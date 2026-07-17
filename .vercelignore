@@ -1,0 +1,6 @@
+# Belt-and-suspenders: meraki/ is already in .gitignore so it won't reach
+# Vercel via git, but if anyone uses `vercel` CLI from the working tree,
+# this keeps it out of the deployment tarball too.
+meraki/
+Energy Assistant Latest copy.html
+.claude/
