@@ -129,13 +129,15 @@ export function dispatchInput(input: string): DispatchResult {
     };
   }
 
-  // ── 1. "Why is my bill higher?" (free-text; bill-chip uses tryDispatchBillSuggestion) ─
+  // ── 1. "Why is my bill higher?" / "Analyse my latest bill" (free-text; bill-chip uses tryDispatchBillSuggestion) ─
   if (matchAny(
     t,
     /\b(why|reason).*\bbill\b.*\b(high|higher|up|spike|increas|more|expensive)\b/,
     /\bbill\b.*\b(higher|went up|going up|increased|more expensive)\b/,
     /\b(high|higher|expensive|spiked)\b.*\bbill\b/,
     /\bbill\b.*\bhigher\b/,
+    /\banaly[sz]e?\b.*\bbill\b/,
+    /\bbill\b.*\banaly[sz]e?\b/,
   )) {
     return {
       message: msg(
