@@ -4,6 +4,7 @@
 
 import type { ChatWidget } from '@/lib/chat/types';
 import ProjectedBillCard from '@/components/widgets/ProjectedBillCard';
+import AnalysisProfileCard from '@/components/widgets/AnalysisProfileCard';
 
 interface Props {
   widget: ChatWidget;
@@ -25,6 +26,8 @@ export default function ChatWidgetRenderer({ widget }: Props) {
           />
         </div>
       );
+    case 'analysis-profile':
+      return <AnalysisProfileCard sections={widget.sections} />;
     default:
       return null;
   }

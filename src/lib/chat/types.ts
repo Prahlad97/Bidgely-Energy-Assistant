@@ -24,6 +24,17 @@ export interface ReportCard {
   panelTitle: string;
 }
 
+export interface AnalysisProfileRow {
+  icon: string;
+  label: string;
+  value: string;
+}
+
+export interface AnalysisProfileSection {
+  heading: string;
+  rows: AnalysisProfileRow[];
+}
+
 /** Inline widgets rendered directly inside an assistant chat bubble.
  *  Discriminated by `type`; each variant carries its own data shape. */
 export type ChatWidget =
@@ -32,6 +43,10 @@ export type ChatWidget =
       current?: number;
       projected?: number;
       progressPct?: number;
+    }
+  | {
+      type: 'analysis-profile';
+      sections: AnalysisProfileSection[];
     };
 
 export interface ChatMessage {

@@ -7,7 +7,6 @@
 
 import { useChatStore } from './store';
 import { dispatchInput } from './responses';
-import { getSolarStep } from './flows/solar';
 import { getEvMessage } from './flows/ev';
 
 export function useSendChat() {
@@ -33,10 +32,7 @@ export function useSendChat() {
     setTimeout(() => {
       setIsTyping(false);
       const result = dispatchInput(trimmed);
-      if (result.startFlow === 'solar') {
-        setFlow('solar', 0, {});
-        addMessage(getSolarStep(0, {}));
-      } else if (result.startFlow === 'ev') {
+      if (result.startFlow === 'ev') {
         setFlow('ev', 0, {});
         addMessage(getEvMessage());
       } else {

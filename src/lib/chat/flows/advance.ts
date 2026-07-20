@@ -5,7 +5,6 @@
 // the caller should fall through to the regular dispatcher.
 
 import type { ChatMessage, FlowName, FlowData, PanelKey } from '../types';
-import { getSolarStep } from './solar';
 import { getEvStep, parseMiles, parseCharging } from './ev';
 
 export interface AdvanceResult {
@@ -30,36 +29,6 @@ export function advanceFlowStep(
   data: FlowData,
 ): AdvanceResult | null {
   if (!flow) return null;
-
-  // ── Solar ───────────────────────────────────────────────────────────────
-  if (flow === 'solar') {
-    if (step === 0) {
-      const a = text.toLowerCase();
-      const roof: 'small' | 'medium' | 'large' = a.includes('large')
-        ? 'large'
-        : a.includes('small')
-        ? 'small'
-        : 'medium';
-      const nextData = { ...data, roof };
-      return { message: getSolarStep(1, nextData), nextStep: 1, nextData, done: false };
-    }
-    if (step === 1) {
-      const a = text.toLowerCase();
-      const shade: 'none' | 'partial' | 'heavy' = a.includes('heavy')
-        ? 'heavy'
-        : (a.includes('none') || a.includes('no shade'))
-        ? 'none'
-        : 'partial';
-      const nextData = { ...data, shade };
-      return {
-        message: getSolarStep(2, nextData),
-        nextStep: 2,
-        nextData,
-        done: true,
-        openPanel: { key: 'solar-dynamic', title: 'Solar Savings Report' },
-      };
-    }
-  }
 
   // ── EV ──────────────────────────────────────────────────────────────────
   if (flow === 'ev') {

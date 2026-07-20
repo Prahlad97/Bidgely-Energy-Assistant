@@ -9,6 +9,7 @@
 import type { ChatMessage, DispatchResult, MessageOption, PanelKey } from './types';
 import { USER } from '@/lib/data/user';
 import { tryDispatchBillSuggestion } from './billSuggestions';
+import { computeSolarMetrics } from '@/lib/data/computations';
 
 // Estimated monthly cost on each rate plan (mirrors the original HTML).
 // Our typed RatePlan struct only carries avgRate; for the conversational
@@ -217,7 +218,10 @@ export function dispatchInput(input: string): DispatchResult {
     return { message: msg(''), startFlow: 'ev' };
   }
 
-  // ── 5. Solar intent — start the solar flow ──────────────────────────────
+  // ── 5. Solar intent — auto-analyze, no follow-up questions ───────────────
+  // The assistant already has everything it needs (bill, rate plan, roof via
+  // Google Solar data), so it responds immediately with what it found and
+  // opens the report — no roof-size / shading Q&A.
   if (matchAny(
     t,
     /\b(is solar|solar worth|worth (it|getting))\b/,
@@ -225,7 +229,48 @@ export function dispatchInput(input: string): DispatchResult {
     /\b(solar|photovoltaic|pv panels?|rooftop)\b/,
     /^panels?$/,
   )) {
-    return { message: msg(''), startFlow: 'solar' };
+    const m = computeSolarMetrics('medium', 'none', USER);
+    const panelCount = Math.round(m.systemKw / 0.4);
+    const roofSqFt = panelCount * 20;
+    const currentPlan = USER.ratePlans.find((p) => p.current);
+    const addressParts = USER.address.split(',').map((s) => s.trim());
+    const cityState = addressParts.slice(-2).join(', ').toUpperCase();
+
+    return {
+      message: msg(
+        `Let's see how solar could affect your energy costs.\n\n` +
+          `Solar appears to be a strong fit for your home.\n` +
+          `We've analyzed your energy usage and roof characteristics. Your personalized Solar Savings Report is ready.`,
+        {
+          widget: {
+            type: 'analysis-profile',
+            sections: [
+              {
+                heading: 'Analyzed your home energy profile',
+                rows: [
+                  { icon: '🖥️', label: 'Utility', value: USER.utility },
+                  { icon: '📍', label: 'Location', value: cityState },
+                  { icon: '⚡', label: 'Rate Plan', value: currentPlan?.name ?? '—' },
+                  { icon: '📊', label: 'Annual Usage', value: `${(USER.bill.kwh * 12).toLocaleString()} kWh` },
+                  { icon: '🚗', label: 'EV', value: `Detected — ${USER.ev.make} ${USER.ev.model}` },
+                  { icon: '🏊', label: 'Pool Pump', value: 'Not Detected' },
+                ],
+              },
+              {
+                heading: 'Analyzed your roof using Google Solar data',
+                rows: [
+                  { icon: '☀️', label: 'Max capacity', value: '25 kW' },
+                  { icon: '📐', label: 'Roof area', value: `~${roofSqFt.toLocaleString()} sq ft usable` },
+                  { icon: '🌤️', label: 'Shade', value: 'None' },
+                ],
+              },
+            ],
+          },
+          reportCard: { label: 'View Solar Savings Report', panel: 'solar-dynamic', panelTitle: 'Solar Savings Report' },
+        },
+      ),
+      openPanel: { key: 'solar-dynamic', title: 'Solar Savings Report' },
+    };
   }
 
   // ── 6. "Show me my bill" / "What changed in my usage?" — bill snapshot ──
